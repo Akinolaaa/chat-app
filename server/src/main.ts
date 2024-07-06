@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto"
 
 import dotenv from 'dotenv';
-import fastify from 'fastify';
-import fastifyCors from '@fastify/cors';
+// import fastify from 'fastify';
+// import fastifyCors from '@fastify/cors';
 import {  Server as SocketServer } from 'socket.io';
 import Redis from 'ioredis';
 import express, { Request, Response } from 'express';
@@ -16,6 +16,7 @@ const PORT = parseInt(process.env.PORT || "5000", 10);
 const HOST = process.env.HOST || "0.0.0.0";
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:3000";
 const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
+
 const CURRENT_COUNT_KEY =  "chat:connection-count"
 const CONNECTION_COUNT_UPDATED_CHANNEL = "chat:connection-count-updated"; // channel cos we are gonna be subscribing and publishing to it
 const NEW_MESSAGE_CHANNEL = "chat:new-message"
@@ -120,6 +121,7 @@ async function main() {
     console.log(`${count} clients subscribed to ${NEW_MESSAGE_CHANNEL} channel`)
   })
 
+  // because you subscribed to the channels above. you can get messages from all those channels
   subscriber.on('message', (channel, payload) => {
     if(channel === CONNECTION_COUNT_UPDATED_CHANNEL) {
       io.emit(CONNECTION_COUNT_UPDATED_CHANNEL, { count: payload })
