@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^9.0.1",
+    "chat-app": "file:..",
     "close-with-grace": "^1.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.2",
