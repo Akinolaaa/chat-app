@@ -46,7 +46,7 @@ npm run dev-server
 Step 8: Run the client server
 
 ```bash
-npm run client-server
+npm run dev-client
 ```
 
 Step 9: Open the client url in your browser `http://localhost:3000`
