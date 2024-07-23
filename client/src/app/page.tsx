@@ -1,4 +1,5 @@
 "use client";
+import { ChatBubble } from "@/components/chatbubble";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FormEvent, useEffect, useState } from "react";
@@ -57,14 +58,7 @@ export default function Home() {
   };
   return (
     <main className="flex flex-col p-4 w-full max-w-3xl mx-auto ">
-      <div className="flex flex-col gap-2">
-        {messages &&
-          messages.map((msg, i) => (
-            <div className="border-blue-400 border-2 bg-gray-300 border-none max-w-fit py-2 px-4 rounded-bl-2xl rounded-tr-2xl rounded-br-2xl">
-              <p key={i}>{msg}</p>
-            </div>
-          ))}
-      </div>
+      <ChatBubble messages={messages}></ChatBubble>
       <form
         onSubmit={handleSubmit}
         className="flex items-center mt-4 py-2 pb-2"
