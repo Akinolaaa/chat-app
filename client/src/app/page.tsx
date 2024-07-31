@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FormEvent, useEffect, useState } from "react";
+import { ChatBubble } from "@/components/chatbubble";
 import io, { Socket } from "socket.io-client";
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "ws://localhost:3001";
@@ -58,12 +59,7 @@ export default function Home() {
   return (
     <main className="flex flex-col p-4 w-full max-w-3xl mx-auto ">
       <div className="flex flex-col gap-2">
-        {messages &&
-          messages.map((msg, i) => (
-            <div className="border-blue-400 border-2 bg-gray-300 border-none max-w-fit py-2 px-4 rounded-bl-2xl rounded-tr-2xl rounded-br-2xl">
-              <p key={i}>{msg}</p>
-            </div>
-          ))}
+        {messages && messages.map((msg, i) => <ChatBubble messages={msg} />)}
       </div>
       <form
         onSubmit={handleSubmit}
