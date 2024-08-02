@@ -128,7 +128,7 @@ async function main() {
       return
     }
     if(channel === NEW_MESSAGE_CHANNEL) {
-      io.emit(NEW_MESSAGE_CHANNEL, { message: payload, id: randomUUID(), createdAt: new Date(), port: PORT })
+      io.emit(NEW_MESSAGE_CHANNEL, { message: payload, id: randomUUID(), createdAt: new Date().toISOString(), port: PORT })
       return
     }
   })

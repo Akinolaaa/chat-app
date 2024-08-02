@@ -3,42 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FormEvent, useEffect, useState } from "react";
 import { ChatBubble } from "@/components/chatbubble";
-import io, { Socket } from "socket.io-client";
+import type { Message } from "@/types";
+import useSocket from "@/hooks/useSocket";
 
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "ws://localhost:3001";
-const CONNECTION_COUNT_UPDATED_CHANNEL = "chat:connection-count-updated"; // channel cos we are gonna be subscribing and publishing to it
+// const CONNECTION_COUNT_UPDATED_CHANNEL = "chat:connection-count-updated"; // channel cos we are gonna be subscribing and publishing to it
 const NEW_MESSAGE_CHANNEL = "chat:new-message";
 
-type Message = {
-  message: string;
-  id: string;
-  port: number;
-  createdAt: string;
-};
 
-function useSocket() {
-  const [socket, setSocket] = useState<Socket | null>();
-
-  useEffect(() => {
-    const socketIO = io(SOCKET_URL, {
-      reconnection: true,
-      upgrade: true,
-      transports: ["websocket", "polling"],
-    });
-
-    setSocket(socketIO);
-
-    return () => {
-      socketIO.disconnect();
-    };
-  }, []);
-
-  return socket;
-}
 export default function Home() {
   const socket = useSocket();
   const [newMessage, setNewMessage] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     socket?.on("connect", () => {
@@ -47,7 +22,7 @@ export default function Home() {
 
     // listen for new messages
     socket?.on(NEW_MESSAGE_CHANNEL, (payload: Message) => {
-      setMessages(() => [payload.message, ...messages]);
+      setMessages(() => [...messages, payload]);
     });
   });
 
@@ -55,24 +30,30 @@ export default function Home() {
     e.preventDefault();
 
     socket?.emit(NEW_MESSAGE_CHANNEL, { message: newMessage });
+
+    setNewMessage("")
   };
+
   return (
-    <main className="flex flex-col p-4 w-full max-w-3xl mx-auto ">
-      <div className="flex flex-col gap-2">
-        {messages && messages.map((msg, i) => <ChatBubble messages={msg} />)}
+    <main className="relative flex flex-col w-full min-h-[50vw] max-h-screen max-w-3xl mx-auto">
+      <h1> Talk to a Random Person Online</h1>
+      <div className="flex flex-col h-full gap-2 overflow-y-scroll">
+        {messages && messages.map((message: Message) => <ChatBubble key={ message.id } message={ message }/>)}
       </div>
       <form
         onSubmit={handleSubmit}
-        className="flex items-center mt-4 py-2 pb-2"
+        className="mt-4 py-2 pb-2 absolute bottom-0 w-full"
       >
-        <Textarea
-          className="rounded-lg mr-4 h-auto min-h-8"
-          placeholder="Tell me what you're thinking of..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          maxLength={255}
-        />
-        <Button className="h-full"> Send </Button>
+        <div className="flex gap-2 items-center w-full">
+          <Textarea
+            className="rounded-lg h-auto min-h-8"
+            placeholder="Tell me what you're thinking of..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            maxLength={255}
+          />
+          <Button className="h-full min-w-min"> Send </Button>
+        </div>
       </form>
     </main>
   );
