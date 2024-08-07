@@ -9,7 +9,6 @@ import useSocket from "@/hooks/useSocket";
 // const CONNECTION_COUNT_UPDATED_CHANNEL = "chat:connection-count-updated"; // channel cos we are gonna be subscribing and publishing to it
 const NEW_MESSAGE_CHANNEL = "chat:new-message";
 
-
 export default function Home() {
   const socket = useSocket();
   const [newMessage, setNewMessage] = useState("");
@@ -31,14 +30,17 @@ export default function Home() {
 
     socket?.emit(NEW_MESSAGE_CHANNEL, { message: newMessage });
 
-    setNewMessage("")
+    setNewMessage("");
   };
 
   return (
     <main className="relative flex flex-col w-full min-h-[50vw] max-h-screen max-w-3xl mx-auto">
-      <h1> Talk to a Random Person Online</h1>
+      <h1 className="py-2"> Talk to a Random Person Online</h1>
       <div className="flex flex-col h-full gap-2 overflow-y-scroll">
-        {messages && messages.map((message: Message) => <ChatBubble key={ message.id } message={ message }/>)}
+        {messages &&
+          messages.map((message: Message) => (
+            <ChatBubble key={message.id} message={message} />
+          ))}
       </div>
       <form
         onSubmit={handleSubmit}
