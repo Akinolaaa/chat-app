@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/Akinolaaa/chat-app/issues"
   },
-  "homepage": "https://github.com/Akinolaaa/chat-app#readme"
+  "homepage": "https://github.com/Akinolaaa/chat-app#readme",
+  "dependencies": {
+    "uuidv4": "^6.2.13"
+  }
 }
